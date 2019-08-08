@@ -1,6 +1,9 @@
 package com.womencancode.projetofinal.service;
 
+import com.womencancode.projetofinal.exception.EntityNotFoundException;
+import com.womencancode.projetofinal.exception.ServiceException;
 import com.womencancode.projetofinal.model.Role;
+import com.womencancode.projetofinal.model.User;
 import com.womencancode.projetofinal.repository.RoleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +30,11 @@ public class RoleService {
         return roleRepository.findAll();
     }
 
-    public Role findById(String id) {
-        return roleRepository.findById(id).get();
+    public Role findById(String id) throws ServiceException {
+        return roleRepository.findById(id).orElseThrow(() -> {
+            String message = String.format("Role %s not found.", id);
+            return new EntityNotFoundException(message);
+        });
     }
     public Role updateRole (Role role){
         return roleRepository.save(role);

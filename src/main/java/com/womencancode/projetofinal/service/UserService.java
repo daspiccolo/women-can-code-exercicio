@@ -1,5 +1,7 @@
 package com.womencancode.projetofinal.service;
 
+import com.womencancode.projetofinal.exception.EntityNotFoundException;
+import com.womencancode.projetofinal.exception.ServiceException;
 import com.womencancode.projetofinal.model.User;
 import com.womencancode.projetofinal.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -22,14 +24,14 @@ public class UserService {
         return userRepository.insert(user);
     }
 
-    public User updateUser(User user) {
+    public User updateUser(User user )  {
         return userRepository.save(user);
     }
-
-    public User findById(String id) {
-        return userRepository.findById(id).get();
-
+    public User findById(String id) throws ServiceException {
+        String message = String.format("User %s not found", id);
+        return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(message));
     }
+
 
     public List<User> findAll(Pageable pageable) {
         return userRepository.findAll();
